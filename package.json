@@ -1,0 +1,24 @@
+{
+  "name": "rmdups",
+  "version": "1.0.0",
+  "description": "Remove duplicate files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "xo"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^13.13.5",
+    "commander": "^5.1.0",
+    "glob": "^7.1.6",
+    "globby": "^11.0.0",
+    "hasha": "^5.2.0",
+    "p-map": "^4.0.0"
+  },
+  "devDependencies": {
+    "json-schema": "^0.2.5",
+    "xo": "^0.30.0"
+  }
+}
