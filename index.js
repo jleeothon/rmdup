@@ -1,27 +1,22 @@
-import {dirname, basename, join} from 'path';
-import {unlinkSync, lstatSync} from 'fs';
-import {EventEmitter} from 'events';
+const {dirname, basename, join} = require('path');
+const {unlinkSync, lstatSync} = require('fs');
+const {EventEmitter} = require('events');
+const globby = require('globby');
+const pMap = require('p-map');
+const hasha = require('hasha');
 
-import * as globby from 'globby';
-import * as pMap from 'p-map';
-import * as hasha from 'hasha';
-
-export async function rmdups(
-	listener: EventEmitter,
-	{dir, recursive}: {dir: string, recursive: boolean}
-) {
+export async function rmdups(emitter, {dir, recursive}) {
 	const dirsPattern = join(dir, recursive ? '**' : '*');
 
-	console.log(dirsPattern);
 	let i = 0;
 	const dirGlobOptions = {onlyDirectories: true};
 	const dirs = await globby(dirsPattern, dirGlobOptions);
 	const dirCount = dirs.length;
-	await pMap(dirs, async (dirPath: string) => {
-		listener.emit('enter-dir', {path: dirPath, index: i++, totalCount: dirCount});
+	await pMap(dirs, async dirPath => {
+		emitter.emit('enter-dir', {path: dirPath, index: i++, totalCount: dirCount});
 
 		const dirFiles = await globby(join(dirPath), {onlyFiles: true});
-		const fileInfos = await pMap(dirFiles, (f: string) => ({
+		const fileInfos = await pMap(dirFiles, f => ({
 			path: f,
 			date: lstatSync(f).ctimeMs,
 			hash: hasha.fromFileSync(f)
@@ -32,7 +27,9 @@ export async function rmdups(
 		// Files to keep
 		const goodFiles = new Map();
 		fileInfos.forEach(info => {
-			!goodFiles.has(info.hash) && goodFiles.set(info.hash, info);
+			if (!goodFiles.has(info.hash)) {
+				goodFiles.set(info.hash, info);
+			}
 		});
 
 		fileInfos.forEach(info => {
@@ -41,37 +38,37 @@ export async function rmdups(
 				return;
 			}
 
-			listener.emit('repeated-file', {path: info.path, originalPath: goodFile.path});
+			emitter.emit('repeated-file', {path: info.path, originalPath: goodFile.path});
 		});
 
-		listener.emit('exit-dir', {path: dirPath});
+		emitter.emit('exit-dir', {path: dirPath});
 	}, {concurrency: 2});
-};
+}
 
 export class DebugEmitter extends EventEmitter {
 	constructor() {
 		super();
-		this.on('enter-dir', (event: {path: string, index: number, totalCount: number}) => {
+		this.on('enter-dir', event => {
 			const percent = (event.index / event.totalCount * 100).toFixed(2);
 			console.log(`===> (${percent}%) "${event.path}"`);
 		});
-		this.on('repeated-file', (event: {path: string, originalPath: string}) => {
+		this.on('repeated-file', event => {
 			const dirnameBoth = dirname(event.path);
 			const basenameBad = basename(event.path);
 			const basenameGood = basename(event.originalPath);
 			console.log(`Delete "${dirnameBoth}"/{"${basenameBad}" < "${basenameGood}"}`);
 		});
-		this.on('exit-dir', (event: {path: string}) => {
+		this.on('exit-dir', event => {
 			console.log(`<=== "${event.path}"`);
 		});
 	}
-};
+}
 
 export class UnlinkEmitter extends DebugEmitter {
 	constructor() {
 		super();
-		this.on('repeated-file', (event: {path: string}) => {
+		this.on('repeated-file', event => {
 			unlinkSync(event.path);
 		});
 	}
-};
+}
