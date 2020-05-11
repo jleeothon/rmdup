@@ -1,5 +1,5 @@
 const {program} = require('commander');
-const {rmdups, DebugEmitter, UnlinkEmitter} = require('..');
+const {rmdup, DebugEmitter, UnlinkEmitter} = require('..');
 
 program
 	.requiredOption('-D, --dir <dir>', 'Directory to inspect')
@@ -17,6 +17,6 @@ const options = {
 	recursive: program.recursive
 };
 
-rmdups(listener, options).catch(error => {
+rmdup(listener, options).catch(error => {
 	console.error(error);
 });

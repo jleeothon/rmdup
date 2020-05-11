@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 
-export declare function rmdups(
+export declare function rmdup(
 	emitter: EventEmitter,
 	{dir, recursive}: {dir: string; recursive: boolean}
 ): Promise<void>;

@@ -1,4 +1,4 @@
-= rmdups
+= rmdup
 
 Remove duplicate files
 
@@ -10,7 +10,7 @@ Remove duplicate files
 # Temporary, until I remember how to make a proper executable
 npx tsc
 node ./out -h
-# Usage: rmdups [options]
+# Usage: rmdup [options]
 # Options:
 #  -D, --dir <dir>        Directory to inspect
 #  etc

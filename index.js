@@ -5,7 +5,7 @@ const globby = require('globby');
 const pMap = require('p-map');
 const hasha = require('hasha');
 
-export async function rmdups(emitter, {dir, recursive}) {
+export async function rmdup(emitter, {dir, recursive}) {
 	const dirsPattern = join(dir, recursive ? '**' : '*');
 
 	let i = 0;
