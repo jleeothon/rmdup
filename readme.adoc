@@ -1,0 +1,23 @@
+= rmdups
+
+Remove duplicate files
+
+== Use
+
+.Command-line usage
+[source,console]
+----
+# Temporary, until I remember how to make a proper executable
+npx tsc
+node ./out -h
+# Usage: rmdups [options]
+# Options:
+#  -D, --dir <dir>        Directory to inspect
+#  etc
+----
+
+== To do
+
+- [ ] Define an executable in `package.json`
+- [ ] Upload to NPM
+- [ ] Write tests
