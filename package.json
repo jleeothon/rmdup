@@ -1,9 +1,10 @@
 {
-  "name": "rmdups",
-  "version": "1.0.0",
+  "name": "@jleeothon/rmdup",
+  "version": "0.1.0",
   "description": "Remove duplicate files",
   "main": "index.js",
   "author": "Johnny Lee-Othon<jleeothon@icloud.com>",
+  "repository": "jleeothon/rmdup",
   "license": "ISC",
   "bin": "bin/index.js",
   "scripts": {
