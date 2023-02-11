@@ -19,6 +19,6 @@
   },
   "devDependencies": {
     "json-schema": "^0.4.0",
-    "xo": "^0.30.0"
+    "xo": "^0.53.1"
   }
 }
